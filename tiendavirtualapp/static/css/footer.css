@@ -1,0 +1,8 @@
+footer{
+    width: 100%;
+    text-align: center;
+    position: relative;
+    margin-top: 10%;
+    bottom: 0;
+    display: flex;
+}

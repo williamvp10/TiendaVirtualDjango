@@ -1,8 +1,215 @@
 {% extends 'base_template.html' %}
+{%load static%}
 {% block title %}
-<title> Home </title>
+<title> Tienda virtual</title>
+{% endblock%}
+
+{% block style %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock%}
 
 {% block content %}
-<h1>Hola </h1>
+<section class="hero">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="hero__categories">
+                    <div class="hero__categories__all">
+                    <i class="fa fa-bars"></i>
+                        <span> Categorías </span>
+                    </div>
+                    <ul>
+                        {% for cat in all_cat %}
+                            <li><a href="#">{{cat.nombre |capfirst }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-9">
+                <div class="hero__search">
+                    <div class="hero__search__form">
+                        <form action="#">
+                            <div class="hero__search__categories">
+                            todas las Categorías
+                            <span class="arrow_carrot-down"></span>
+                            </div>
+                            <input type="text" placeholder="¿Qué estás buscando?">
+                            <button type="submit" class="site-btn">SEARCH</button>
+                        </form>
+                    </div>
+                    <div class="hero__search__phone">
+                        <div class="hero__search__phone__icon">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <div class="hero__search__phone__text">
+                            <h5>+65 11.188.888</h5>
+                            <span>support 24/7 time</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero__item set-bg" data-setbg="{% static 'img/banner.jpg' %}" style="background-image: url({% static 'img/banner.jpg' %});">
+                    <div class="hero__text">
+                        <span>FRUTAS FRESCAS</span>
+                        <h2>Vegetales <br>100% Organicos</h2>
+                        <p>Entrega sin costo</p>
+                        <a href="{% url 'listaactivos' %}" class="primary-btn">Compra Ahora</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="latest-product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-6">
+                <div class="latest-product__text">
+                    <h4>Últimos productos</h4>
+                    <div class="latest-product__slider owl-carousel owl-loaded owl-drag">
+                        <div class="owl-stage-outer">
+                            <div class="owl-stage">
+                                <div class="owl-item cloned" style="width: 289.984px;">
+                                    <div class="latest-prdouct__slider__item">
+                                        {% for product in latest_prod %}
+                                            {% if forloop.counter <= 3 %}
+                                                <a href="{% url 'productodetalles' product_id=product.id %}" class="latest-product__item">
+                                                    <div class="latest-product__item__pic">
+                                                        {% with 'img/products/'|add:product.imagen as image_static %}
+                                                        <img src="{% static image_static %}" alt="">
+                                                        {% endwith %}
+                                                        
+                                                    </div>
+                                                    <div class="latest-product__item__text">
+                                                        <h6>{{ product.nombre}}</h6>
+                                                        <span>{{product.unidad}} - {{product.precio_unidad}} COP</span>
+                                                    </div>
+                                                </a>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                                <div class="owl-item cloned" style="width: 289.984px;">
+                                    <div class="latest-prdouct__slider__item">
+                                        {% for product in latest_prod %}
+                                            {% if forloop.counter > 3  and forloop.counter <= 6%}
+                                                <a href="{% url 'productodetalles' product_id=product.id %}" class="latest-product__item">
+                                                    <div class="latest-product__item__pic">
+                                                        {% with 'img/products/'|add:product.imagen as image_static %}
+                                                        <img src="{% static image_static %}" alt="">
+                                                        {% endwith %}
+                                                        
+                                                    </div>
+                                                    <div class="latest-product__item__text">
+                                                        <h6>{{ product.nombre}}</h6>
+                                                        <span>{{product.unidad}} - {{product.precio_unidad}} COP</span>
+                                                    </div>
+                                                </a>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><span class="fa fa-angle-left"><span></span></span></button><button type="button" role="presentation" class="owl-next"><span class="fa fa-angle-right"><span></span></span></button></div><div class="owl-dots disabled"></div></div>
+                    </div>
+                </div>
+            <div class="col-lg-4 col-md-6">
+                    <div class="latest-product__text">
+                        <h4>Top Calificados</h4>
+                        <div class="latest-product__slider owl-carousel owl-loaded owl-drag">
+                        <div class="owl-stage-outer"><div class="owl-stage" ><div class="owl-item cloned" style="width: 289.984px;"><div class="latest-prdouct__slider__item">
+                            {% for product in top_prod %}
+                                {% if forloop.counter <= 3 %}
+                                    <a href="{% url 'productodetalles' product_id=product.producto.id %}" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            {% with 'img/products/'|add:product.producto.imagen as image_static %}
+                                            <img src="{% static image_static %}" alt="">
+                                            {% endwith %}
+                                                        
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6>{{ product.producto.nombre}}</h6>
+                                            <span>{{product.producto.unidad}} - {{product.producto.precio_unidad}} COP</span>
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                            
+                        </div></div>
+                        <div class="owl-item cloned" style="width: 289.984px;"><div class="latest-prdouct__slider__item">
+                            {% for product in top_prod %}
+                                {% if forloop.counter > 3  and forloop.counter <= 6%}
+                                    <a href="{% url 'productodetalles' product_id=product.producto.id %}" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            {% with 'img/products/'|add:product.producto.imagen as image_static %}
+                                            <img src="{% static image_static %}" alt="">
+                                            {% endwith %}
+                                                        
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6>{{ product.producto.nombre}}</h6>
+                                            <span>{{product.producto.unidad}} - {{product.producto.precio_unidad}} COP</span>
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+                    </div></div></div></div>
+                    
+                    <div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><span class="fa fa-angle-left"><span></span></span></button><button type="button" role="presentation" class="owl-next"><span class="fa fa-angle-right"><span></span></span></button></div><div class="owl-dots disabled"></div></div>
+                </div>
+            </div>
+    <div class="col-lg-4 col-md-6">
+        <div class="latest-product__text">
+            <h4>Últimos Evaluados</h4>
+            <div class="latest-product__slider owl-carousel owl-loaded owl-drag">
+                <div class="owl-stage-outer"><div class="owl-stage"><div class="owl-item cloned" style="width: 289.984px;"><div class="latest-prdouct__slider__item">
+                            {% for product in latest_review %}
+                                {% if forloop.counter <= 3 %}
+                                    <a href="{% url 'productodetalles' product_id=product.producto.id %}" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            {% with 'img/products/'|add:product.producto.imagen as image_static %}
+                                            <img src="{% static image_static %}" alt="">
+                                            {% endwith %}
+                                                        
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6>{{ product.producto.nombre}}</h6>
+                                            <span>{{product.producto.unidad}} - {{product.producto.precio_unidad}} COP</span>
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}   
+    
+                </div></div><div class="owl-item cloned" style="width: 289.984px;"><div class="latest-prdouct__slider__item">
+                            {% for product in latest_review %}
+                                {% if forloop.counter > 3  and forloop.counter <= 6%}
+                                    <a href="{% url 'productodetalles' product_id=product.producto.id %}" class="latest-product__item">
+                                        <div class="latest-product__item__pic">
+                                            {% with 'img/products/'|add:product.producto.imagen as image_static %}
+                                            <img src="{% static image_static %}" alt="">
+                                            {% endwith %}
+                                                        
+                                        </div>
+                                        <div class="latest-product__item__text">
+                                            <h6>{{ product.producto.nombre}}</h6>
+                                            <span>{{product.producto.unidad}} - {{product.producto.precio_unidad}} COP</span>
+                                        </div>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+    
+        </div></div></div></div><div class="owl-nav"><button type="button" role="presentation" class="owl-prev"><span class="fa fa-angle-left"><span></span></span></button><button type="button" role="presentation" class="owl-next"><span class="fa fa-angle-right"><span></span></span></button></div><div class="owl-dots disabled"></div></div>
+        </div>
+    </div>
+    </div>
+    </div>
+    
+</section>
+
 {% endblock%}

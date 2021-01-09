@@ -1,0 +1,173 @@
+{% extends 'base_template.html' %}
+{%load static%}
+{% block title %}
+<title> shopping cart </title>
+{% endblock%}
+
+
+{% block content %}
+<section class="breadcrumb-section set-bg" data-setbg="{% static 'img/breadcrumb.jpg' %}" style="background-image: url(&quot;img/breadcrumb.jpg&quot;);">
+    <div class="container">
+        <div class="row">
+        <div class="col-lg-12 text-center">
+        <div class="breadcrumb__text">
+        <h2>{{producto.nombre}}</h2>
+        <div class="breadcrumb__option">
+        <a href="{% url 'home' %}">Home</a>
+        <span>{{producto.nombre}}</span>
+        </div>
+        </div>
+        </div>
+        </div>
+    </div>
+</section>
+
+<section class="product-details spad">
+<div class="container">
+<div class="row">
+<div class="col-lg-6 col-md-6">
+<div class="product__details__pic">
+<div class="product__details__pic__item">
+    {% with 'img/products/'|add:producto.imagen as image_static %}
+        <img class="product__details__pic__item--large" src="{% static image_static %}" alt="">
+    {% endwith %}
+
+</div>
+<div class="product__details__pic__slider owl-carousel owl-loaded owl-drag">
+    <div class="owl-stage-outer">
+    <div class="owl-stage" style="transform: translate3d(-587px, 0px, 0px); transition: all 1.2s ease 0s; width: 1410px;">
+    {% for i in range %}
+        <div class="owl-item cloned" style="width: 97.5px; margin-right: 20px;">
+            {% with 'img/products/'|add:producto.imagen as image_static %}
+                <img data-imgbigurl="{% static image_static %}" src="{% static image_static %}" alt="">
+            {% endwith %}
+            
+        </div>
+    {% endfor %}
+
+    </div></div><div class="owl-nav disabled"><button type="button" role="presentation" class="owl-prev"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next"><span aria-label="Next">›</span></button></div>
+    <div class="owl-dots disabled">
+    <button role="button" class="owl-dot active"><span></span></button>
+    </div></div>
+    </div>
+</div>
+<div class="col-lg-6 col-md-6">
+<div class="product__details__text">
+<h3>{{producto.nombre}}</h3>
+<div class="product__details__rating">
+{% for i in promedio %}
+    <i class="fa fa-star"></i>
+{% endfor %}
+
+<span>({{calificaciones|length}} calificaciones)</span>
+</div>
+<div class="product__details__price">{{producto.precio_unidad}} COP {{producto.unidad}}</div>
+<p>{{producto.descripcion}}</p>
+    <form method="POST" action="{% url 'addproduct' %}">{% csrf_token %}
+        <div class="product__details__quantity">
+            <div class="quantity">
+                <div class="pro-qty"><!--<span class="dec qtybtn">-</span>-->
+                <input type="quantity" id="quantity" name="quantity" value="1">
+                <!--<span class="inc qtybtn">+</span>-->
+                </div>
+            </div>
+            <input type="hidden" id="product_id" name="product_id" value="{{producto.id}}">
+        </div>
+        <button type="submit" class="primary-btn">Adicionar al carrito</button>
+        <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+    </form>
+<ul>
+<li><b>Disponibilidad</b> <span>In Stock</span></li>
+<li><b>Envio</b> <span>1 día de envio. <samp>Sin costo para bogotá</samp></span></li>
+<li><b>Codigo</b> <span>{{producto.codigo}}</span></li>
+<li><b>Compartir</b>
+<div class="share">
+<a href="#"><i class="fa fa-facebook"></i></a>
+<a href="#"><i class="fa fa-twitter"></i></a>
+<a href="#"><i class="fa fa-instagram"></i></a>
+<a href="#"><i class="fa fa-pinterest"></i></a>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<div class="col-lg-12">
+<div class="product__details__tab">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item">
+<a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab" aria-selected="true">Descripción</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab" aria-selected="false">Información</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab" aria-selected="false">Calificaciones <span>({{calificaciones|length}})</span></a>
+</li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane active" id="tabs-1" role="tabpanel">
+<div class="product__details__tab__desc">
+<h6>Descripción del producto</h6>
+<p>{{producto.descripcion}}</p>
+</div>
+</div>
+<div class="tab-pane" id="tabs-2" role="tabpanel">
+<div class="product__details__tab__desc">
+<h6>Infomación del producto</h6>
+<p>{{producto.descripcion}}</p>
+</div>
+</div>
+<div class="tab-pane" id="tabs-3" role="tabpanel">
+<div class="product__details__tab__desc">
+<h6>Calificaciones del producto</h6>
+
+{% for cal in calificaciones %}
+    <p> {{cal.comentario}}
+        <br> Calificación: {{cal.calificacion}}
+        <br> Fecha: {{cal.fecha_calificacion}}
+    </p>
+{% endfor %}
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="related-product">
+<div class="container">
+<div class="row">
+<div class="col-lg-12">
+<div class="section-title related__product__title">
+<h2>Productos Relacionados</h2>
+</div>
+</div>
+</div>
+<div class="row">
+    {% for productocat in productos_relacionados %}
+        {% if forloop.counter <= 4 %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="product__item">
+            {% with 'img/products/'|add:productocat.imagen as image_static %}
+                <div class="product__item__pic set-bg" data-setbg="{% static image_static %}" style="background-image: url(&quot;{% static image_static %}&quot;);">
+            {% endwith %}
+            <ul class="product__item__pic__hover">
+            <li><a href="#"><i class="fa fa-heart"></i></a></li>
+            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+            </ul>
+            </div>
+            <div class="product__item__text">
+            <h6><a href="#">{{productocat.nombre}}</a></h6>
+            <h5>{{productocat.precio_unidad}} COP {{productocat.unidad}}</h5>
+            </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>
+</div>
+</section>
+{% endblock%}

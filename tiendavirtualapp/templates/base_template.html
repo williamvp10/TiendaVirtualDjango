@@ -4,15 +4,21 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title> Tienda virtual</title>
         
-        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
-        <link rel="stylesheet" href="{% static 'fa/css/all.min.css' %}">
-        <link rel="stylesheet" href="{% static 'fa/css/all.min.css' %}">
-        <script src="{% static 'bootstrap/jquery/jquery-3.5.1.min.js' %}"></script>
-        <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/elegant-icons.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/slicknav.min.css' %}" type="text/css">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+        <!-- styles-->
+        <link rel="stylesheet" href="{% static 'css/footer.css' %}" type="text/css">
         {% block title %}
+        {% endblock%}
+
+        {% block style %}
         {% endblock%}
     </head>
 
@@ -22,7 +28,15 @@
 
         {% block content %}
         {% endblock%}
+
         {% include "footer.html" %}
-        
+        <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/jquery.nice-select.min.js' %}"></script>
+        <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+        <script src="{% static 'js/jquery.slicknav.js' %}"></script>
+        <script src="{% static 'js/mixitup.min.js' %}"></script>
+        <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'js/main.js' %}"></script>
     </body>
 </html>
