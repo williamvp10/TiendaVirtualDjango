@@ -48,7 +48,7 @@
       <nav class="header__menu">
         <ul>
           <li class="active"><a href="{% url 'home' %}">Home</a></li>
-          <li><a href="{% url 'listaactivos' %}">Productos</a></li>
+          <li><a href="{% url 'listaactivos' categoria_id=0 %}">Productos</a></li>
           <li><a href="#">Carrito</a>
             <ul class="header__menu__dropdown">
             <li><a href="{% url 'shoppingcart' %}">Carrito de Compras</a></li>

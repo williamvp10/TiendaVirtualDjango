@@ -68,7 +68,7 @@ class Clientes(models.Model):
         ('No','Inactivo')
     )
     activo=models.CharField(max_length=2,choices=TRUE_FALSE_CHOICES,default='Si')
-    
+    telefono=models.CharField(max_length=15,verbose_name="Teléfono",null=True,default=None)
     def __str__(self):
         return 'Cliente {nombre} {apellido} con correo {correo}, activo:{activo}'.format(
             nombre=self.nombre,apellido=self.apellido,correo=self.correo,activo=self.activo)
@@ -99,7 +99,7 @@ class Pedidos(models.Model):
     )
     estado=models.CharField(max_length=2,choices=ESTADO_CHOICES,default='Rg')
     # relacion 1 a muchos
-    cliente=models.ForeignKey(Clientes,on_delete=models.CASCADE)
+    cliente=models.ForeignKey(Clientes,on_delete=models.PROTECT)
     class Meta:
         verbose_name_plural= "Pedidos"
 

@@ -2,8 +2,11 @@ from django.db import reset_queries
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404,redirect
 from django.http import HttpResponse
+#MODELOS
 from tiendavirtualapp.models import Categorias,Calificaciones,Productos,ProductosPedido,Pedidos,Inventario,Clientes
-# Create your views here.
+# FORMULARIOS
+from tiendavirtualapp.forms import FormularioCliente,FormularioPedido
+
 def home(request):
     validate_sesion(request)
     all_cat=Categorias.objects.all().order_by('id')
@@ -14,9 +17,22 @@ def home(request):
         "all_cat":all_cat,"latest_prod":latest_prod,"top_prod":top_prod,"latest_review":latest_review
     })
 
-def lista_activos(request):
+def lista_activos(request,categoria_id):
     validate_sesion(request)
-    return render(request,"listaactivos.html")
+    print(categoria_id)
+    latest_prod=Productos.objects.all().order_by('-id')[:6]
+    
+    if categoria_id==0:
+        categoria={"nombre":"Todas las categorías"}
+        productos=Productos.objects.all().order_by('id')
+    else:
+        categoria=Categorias.objects.filter(id=categoria_id).get()
+        productos=Productos.objects.filter(categoria_id=categoria_id).order_by('id')
+    print(productos)
+    print(categoria)
+    return render(request,"listaactivos.html",{
+        "latest_prod":latest_prod,"categoria":categoria,"productos":productos
+    })
 
 def producto_detalles(request,product_id):
     print("entroo prod")
@@ -50,12 +66,27 @@ def shopping_cart(request):
         producto=get_object_or_404(Productos,pk=int(prod_id))
         total_producto=float(producto.precio_unidad)*prod_quantity
         shopping_list.append({"quantity":prod_quantity,"product_id":prod_id,"nombre":producto.nombre,
-            "precio":producto.precio_unidad,"total":total_producto })
+            "imagen":producto.imagen,"precio":producto.precio_unidad,"total":total_producto })
     return render(request,"shopping_cart.html",{"shopping_list":shopping_list})
 
 def checkout(request):
     validate_sesion(request)
-    return render(request,"checkout.html")
+    shopping_list=[]
+    print(request.session["shop_cart"]["productos"])
+    for prod_id, prod_quantity in request.session["shop_cart"]["productos"].items():
+        producto=get_object_or_404(Productos,pk=int(prod_id))
+        total_producto=float(producto.precio_unidad)*prod_quantity
+        shopping_list.append({"quantity":prod_quantity,"product_id":prod_id,"nombre":producto.nombre,
+            "precio":producto.precio_unidad,"total":total_producto })
+    
+    #Nota el impuesto seria una variable global
+    impuesto_porcentaje= 0.1
+    
+    impuesto=request.session["shop_cart"]["total_valor"] * impuesto_porcentaje
+    total_carrito_impuesto=request.session["shop_cart"]["total_valor"] * (1.0+impuesto_porcentaje)
+
+    return render(request,"checkout.html",{"shopping_list":shopping_list,
+        "impuesto":round(impuesto,2),"total_carrito_impuesto":round(total_carrito_impuesto,2)})
 
 def contact(request):
     validate_sesion(request)
@@ -131,6 +162,35 @@ def deleteproduct(request):
         return redirect('shoppingcart')
     else:
         return HttpResponse("Error no se ha seleccionado producto")
+
+def procesar_pago(request):
+    validate_sesion(request)
+    print(request.POST)
+    if not (request.session["shop_cart"]["total_valor"]>0.0 and request.session["shop_cart"]["total_productos"]>0):
+        return redirect("checkout")
+    
+    if request.method == "POST":
+        clientesform=FormularioCliente(request.POST)
+        pedidosform=FormularioPedido(request.POST)
+        if clientesform.is_valid() and pedidosform.is_valid():
+            cliente=clientesform.save()
+            pedido=pedidosform.save(commit=False)
+            pedido.cliente= cliente
+            pedido.save()
+            #creacion de las instancias productos pedidos
+            for prod_id, prod_quantity in request.session["shop_cart"]["productos"].items():
+                producto=get_object_or_404(Productos,pk=int(prod_id))
+                total_producto=float(producto.precio_unidad)*prod_quantity
+                pp = ProductosPedido(cantidad=prod_quantity,subtotal=total_producto)
+                pp.producto=producto
+                pp.pedido=pedido
+                pp.save()
+        
+            request.session.pop('shop_cart')
+            return render(request,"pedido_exitoso.html",{"mensaje":"su compra fue registrada correctamente, en los proximos días recibirá su producto."})
+        else:
+            return HttpResponse("Se presentaron errores en el formulario: {} {}".format(clientesform.errors,pedidosform.errors))
+    return HttpResponse("Accesso Invalido!!")
 
 def validate_sesion(request):
     if 'shop_cart' not in request.session:

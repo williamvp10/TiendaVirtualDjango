@@ -20,7 +20,7 @@
                     </div>
                     <ul>
                         {% for cat in all_cat %}
-                            <li><a href="#">{{cat.nombre |capfirst }}</a></li>
+                            <li><a href="{% url 'listaactivos' categoria_id=cat.id %}">{{cat.nombre |capfirst }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -53,7 +53,7 @@
                         <span>FRUTAS FRESCAS</span>
                         <h2>Vegetales <br>100% Organicos</h2>
                         <p>Entrega sin costo</p>
-                        <a href="{% url 'listaactivos' %}" class="primary-btn">Compra Ahora</a>
+                        <a href="{% url 'listaactivos' categoria_id=0 %}" class="primary-btn">Compra Ahora</a>
                     </div>
                 </div>
             </div>
